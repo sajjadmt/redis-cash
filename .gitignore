@@ -1,0 +1,25 @@
+# Composer dependencies
+/vendor/
+
+# Symfony cache and logs
+/var/
+/*.log
+
+# Environment files
+.env
+.env.local
+.env.*.local
+.env.test
+
+# PHPStorm settings
+.idea/
+
+# Node.js
+/node_modules/
+
+/public/bundles/
+
+# Others
+.DS_Store
+*.lock
+*.cache

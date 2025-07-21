@@ -1,0 +1,20 @@
+framework:
+    cache:
+        # Unique name of your app: used to compute stable namespaces for cache keys.
+        prefix_seed: symfony_docker_app
+
+        # Configure Redis as the main cache adapter
+        app: cache.adapter.redis
+        default_redis_provider: '%env(REDIS_URL)%'
+
+        # Configure custom cache pools for different purposes
+        pools:
+            cache.custom:
+                adapter: cache.adapter.redis
+                provider: redis://redis:6379/1
+            cache.user_data:
+                adapter: cache.adapter.redis
+                provider: redis://redis:6379/2
+            cache.api_responses:
+                adapter: cache.adapter.redis
+                provider: redis://redis:6379/3
