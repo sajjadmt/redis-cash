@@ -5,6 +5,6 @@ namespace App\Interface;
 interface CacheRepositoryInterface
 {
 
-    public function getName(string $cacheName, string $value): ?string;
+    public function getOrSet(string $key, string $value, int $ttl = 60): string;
 
 }

@@ -15,15 +15,10 @@ final class NameController extends AbstractController
     {
         $name = $request->get('name');
         if (!$name) {
-            $json = json_decode($request->getContent(), true);
-            $name = $json['name'] ?? null;
-        }
-
-        if (empty($name)) {
             return new JsonResponse(['error' => 'name is required'], 400);
         }
 
-        $cached = $repository->getName('cached_name', $name);
+        $cached = $repository->getOrSet('cached_name', $name, 60);
 
         return new JsonResponse(['cached_name' => $cached]);
     }
