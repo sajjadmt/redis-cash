@@ -13,15 +13,18 @@ final class NameController extends AbstractController
     #[Route('/api/name', name: 'api_name', methods: ['POST','GET'])]
     public function setName(Request $request, CachedNameRepository $repository): JsonResponse
     {
-        $newName = $request->get('name');
-        if ($newName === '' || $newName === null) {
+        $name = $request->get('name');
+        if (!$name) {
+            $json = json_decode($request->getContent(), true);
+            $name = $json['name'] ?? null;
+        }
+
+        if (empty($name)) {
             return new JsonResponse(['error' => 'name is required'], 400);
         }
-        $cached = $repository->getName();
-        if (!$cached) {
-            $repository->saveName($newName);
-            $cached = $newName;
-        }
-        return new JsonResponse(['name' => $cached]);
+
+        $cached = $repository->getName('cached_name', $name);
+
+        return new JsonResponse(['cached_name' => $cached]);
     }
 }

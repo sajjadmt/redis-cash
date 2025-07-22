@@ -2,29 +2,29 @@
 
 namespace App\Repository;
 
+use App\Interface\CacheRepositoryInterface;
 use Psr\Cache\CacheItemPoolInterface;
 
-class CachedNameRepository
+class CachedNameRepository implements CacheRepositoryInterface
 {
-    private CacheItemPoolInterface $cacheItemPool;
 
-    public function __construct(CacheItemPoolInterface $cacheItemPool)
+    public function __construct(private CacheItemPoolInterface $cacheItemPool)
     {
-        $this->cacheItemPool = $cacheItemPool;
     }
 
-    public function getName(): ?string
+    public function getName(string $cacheName,string $value): ?string
     {
-        $item = $this->cacheItemPool->getItem('name');
-        return $item->isHit() ? $item->get() : null;
-    }
+        $item = $this->cacheItemPool->getItem($cacheName);
 
-    public function saveName(string $name): void
-    {
-        $item = $this->cacheItemPool->getItem('name');
-        $item->set($name);
+        if ($item->isHit()) {
+            return $item->get();
+        }
+
+        $item->set($value);
         $item->expiresAfter(60);
         $this->cacheItemPool->save($item);
+
+        return $value;
     }
 
 }
